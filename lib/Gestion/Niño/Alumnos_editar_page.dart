@@ -46,7 +46,6 @@ class _Alumnos_editar_pageState extends State<Alumnos_editar_page> {
           telefonoCtrl.text = data['telefono'];
           edadCtrl.text = data['edad'].toString();
           cursoCtrl.text = data['nom_curso'];
-         
           return Form(
             key: formKey,
             child: ListView(
@@ -71,6 +70,8 @@ class _Alumnos_editar_pageState extends State<Alumnos_editar_page> {
                   controller: edadCtrl,
                   decoration: InputDecoration(labelText: 'Edad'),
                 ),
+
+
                 
                 Container(
                   child: FutureBuilder(
@@ -84,34 +85,32 @@ class _Alumnos_editar_pageState extends State<Alumnos_editar_page> {
                           onChanged: (valor) {},
                         );
                       }
-
                       var curso = snapshot.data;
-
-                      return DropdownButtonFormField<String>(
-                        
-                        hint: Text(cursoCtrl.text),
+                      return DropdownButtonFormField<String>(                    
+                        hint: Text('Cursos'),
                         items: curso.map<DropdownMenuItem<String>>((curs) {
                           return DropdownMenuItem<String>(
                             child: Text(curs['curso']),
                             value: curs['curso'],
                           );
                         }).toList(),
-                        value: curs.isEmpty ? null : curs,
+                        value: cursoCtrl.text,
                         onChanged: (nuevaRegion) {
-                          setState(() {
-                            curs = nuevaRegion.toString();
-                          });
+                          curs = nuevaRegion.toString();
+                          
                         },
                       );
                     },
                   ),
                 ),
-
                 Container(
                   width: double.infinity,
                   child: ElevatedButton(
                     child: Text('Editar'),
                     onPressed: (){
+                      if (curs.isEmpty){
+                        curs = cursoCtrl.text;
+                      }                     
                       AlumnosProvider().alumnosEditar(widget.codAlumno, codigoCtrl.text.trim(), nombreCtrl.text.trim(), direccionCtrl.text.trim(), telefonoCtrl.text.trim(), int.tryParse(edadCtrl.text.trim())??0, curs);
                       Navigator.pop(context);
                     },
@@ -120,7 +119,6 @@ class _Alumnos_editar_pageState extends State<Alumnos_editar_page> {
                     )
                   ),
                 )
-
               ],
             ),
           );
